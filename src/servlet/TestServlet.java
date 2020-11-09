@@ -27,9 +27,11 @@ public class TestServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String title = "Java Web Project";
 		String name = request.getParameter("name");
 		System.out.println(name);
         request.setAttribute("name", name);
+        request.setAttribute("title", title);
         request.getRequestDispatcher("namePage.jsp").forward(request, response);
 	}
 

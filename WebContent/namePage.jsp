@@ -2,12 +2,12 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body style="text-align: center;">
-<h1>Hello There</h1>
-<p>Hello ${name}</p>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<title>${ title }</title>
+	</head>
+	<body style="text-align: center;">
+		<h1>Hello There</h1>
+		<p>Hello ${ name }</p>
+	</body>
 </html>
