@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import webProject.model.User;
+import webProject.model.UserPost;
 import webProject.model.dao.Dao;
 
 /**
@@ -34,7 +34,12 @@ public class MyServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		
+		// https://stackoverflow.com/questions/3608891/pass-variables-from-servlet-to-jsp
+		//request.getRequestDispatcher("index.jsp").forward(request, response);
+		
+		/*
 		System.out.println("Kurssi.doGet()");
 		
 		String strJSON = null;
@@ -48,6 +53,7 @@ public class MyServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(strJSON);
+		*/
 	}
 
 	

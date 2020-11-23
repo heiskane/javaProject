@@ -8,8 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
+// import org.json.JSONObject;
 
 import webProject.model.Hash;
 import webProject.model.User;
@@ -36,52 +37,76 @@ public class LoginServlet extends HttpServlet {
 		
 		String user = request.getParameter("user");
 		String password = request.getParameter("pass");
-		
+
 		String submit = request.getParameter("submit");
 		
-		System.out.println(request.getContextPath());
+		// Get name of the logged in user
+		// https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSession.html
+		HttpSession session = request.getSession();
+		//System.out.println(session.getAttribute("loggedInUser"));
 		
-		String passwordHash = Hash.makeHash(password);
-		
-		Dao dao = new Dao();
-		
-		ArrayList<User> users;
-		users = dao.listAll();
-		
-		if (submit.equals("Login"))
-		{	
-			User localUser = findUser(user, users);
-			if (passwordHash.equals(localUser.getPassword()))
-			{
-				request.getSession().setAttribute("loggedInUser", user);
-				response.getWriter().append("Logged in as: " + user);
-			}
-			else
-			{
-				response.getWriter().append("Login failed");
-			}
-		}
-		else if (submit.equals("Register"))
+		// https://stackoverflow.com/questions/13963720/how-to-effectively-destroy-session-in-java-servlet
+		if (request.getParameter("submit").equals("logout"))
 		{
-			if (findUser(user, users) != null)
-			{
-				response.getWriter().append("Username taken!");
-			}
-			else
-			{
-				int userCount = users.size();
-				// Set user id to length of users list + 1
-				if (dao.addUser(userCount + 1, user, passwordHash))
+			session.invalidate();
+			response.sendRedirect("login.jsp");
+			return;
+		}
+		
+		// Handle empty usernames and/or passwords
+		if (password == null || user == null || password.equals("") || user.equals(""))
+		{
+			response.getWriter().append("Error: Username or Password empty");
+		}
+		else
+		{
+			String passwordHash;
+			passwordHash = Hash.makeHash(password);
+			
+			Dao dao = new Dao();
+			
+			ArrayList<User> users;
+			users = dao.listAllUsers();
+			
+			if (submit.equals("Login"))
+			{	
+				User localUser = findUser(user, users);
+				
+				if (localUser != null && passwordHash.equals(localUser.getPassword()))
 				{
-					response.getWriter().append("User registered");
+					request.getSession().setAttribute("loggedInUser", user);
+					response.getWriter().append("Logged in as: " + user);
+					response.sendRedirect(request.getContextPath() + "/index.jsp");
 				}
 				else
 				{
-					response.getWriter().append("Registration failed");
+					response.getWriter().append("Login failed");
+				}
+			}
+			else if (submit.equals("Register"))
+			{
+				if (findUser(user, users) != null)
+				{
+					response.getWriter().append("Username taken!");
+				}
+				else
+				{
+					int userCount = users.size();
+					int id = users.get(userCount - 1).getId();
+					// Set user id to last users id + 1
+					if (dao.addUser(id + 1, user, passwordHash))
+					{
+						response.getWriter().append("User registered");
+						response.sendRedirect(request.getContextPath() + "/login.jsp");
+					}
+					else
+					{
+						response.getWriter().append("Registration failed");
+					}
 				}
 			}
 		}
-		
+
 	}
 
 	/**
