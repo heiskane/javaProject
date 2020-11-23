@@ -218,11 +218,44 @@ public class Dao {
 					e.printStackTrace();
 				}
 			}
+			con.close();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public String getPostUser(int id) {
+		// https://www.sqlitetutorial.net/sqlite-java/delete/
+		sql = "SELECT username FROM posts WHERE id = ?";
+		String user = "";
+		try
+		{
+			con = connect();
+			if (con != null)
+			{
+				try
+				{
+					PreparedStatement prepped = con.prepareStatement(sql);
+					prepped.setInt(1, id);       		
+	        		rs = prepped.executeQuery();
+	        		user = rs.getString(1);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					return null;
+				}
+			}
+			con.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return user;
 	}
 	
 }

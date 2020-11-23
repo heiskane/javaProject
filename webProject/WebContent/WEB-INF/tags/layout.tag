@@ -1,4 +1,4 @@
-<!-- https://stackoverflow.com/questions/1296235/jsp-tricks-to-make-templating-easier -->
+<%-- https://stackoverflow.com/questions/1296235/jsp-tricks-to-make-templating-easier --%>
 <%@tag description="Simple Wrapper Tag" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -11,7 +11,7 @@
 	<div class="nav">
 		<ul>
 			<li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
-			<li><a href="${pageContext.request.contextPath}/index.jsp">Post?</a></li>
+			<li><a href="${pageContext.request.contextPath}/post.jsp">Post</a></li>
 <% if (session.getAttribute("loggedInUser") != null) { %>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/LoginServlet?submit=logout">Logout</a></li>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/index.jsp">Account(not ready)</a></li>

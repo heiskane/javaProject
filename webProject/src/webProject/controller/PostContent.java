@@ -53,9 +53,9 @@ public class PostContent extends HttpServlet {
 					int postCount = posts.size();
 					int id = posts.get(postCount - 1).getId();
 					
-					String user = (String) session.getAttribute("loggedInUser");
 					String title = request.getParameter("title");
 					String content = request.getParameter("content");
+					String user = (String) session.getAttribute("loggedInUser");
 					
 					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 					LocalDateTime now = LocalDateTime.now();
@@ -64,14 +64,15 @@ public class PostContent extends HttpServlet {
 					dao.addPost(id + 1, user, title, content, date);
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsp");
-				} 
+				}
 				else if (action.equals("delete"))
 				{
-					// TODO Allow removing own posts
-					if (session.getAttribute("loggedInUser").equals("admin"))
+					// https://jaxenter.com/convert-java-string-int-134101.html
+					int id = Integer.parseInt(request.getParameter("id"));
+					String user = dao.getPostUser(id);
+					// Allow post deletion if username is admin or current user posted it
+					if (session.getAttribute("loggedInUser").equals("admin") || session.getAttribute("loggedInUser").equals(user))
 					{
-						// https://jaxenter.com/convert-java-string-int-134101.html
-						int id = Integer.parseInt(request.getParameter("id"));
 						dao.deletePost(id);
 						response.sendRedirect(request.getContextPath() + "/index.jsp");	
 					}

@@ -4,4 +4,10 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout>
  <t:content />
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
 </t:layout>

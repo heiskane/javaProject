@@ -37,7 +37,7 @@ public class MyServlet extends HttpServlet {
 
 		
 		// https://stackoverflow.com/questions/3608891/pass-variables-from-servlet-to-jsp
-		//request.getRequestDispatcher("index.jsp").forward(request, response);
+		// request.getRequestDispatcher("index.jsp").forward(request, response);
 		
 		/*
 		System.out.println("Kurssi.doGet()");
