@@ -3,12 +3,14 @@ package webProject.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
@@ -35,7 +37,16 @@ public class MyServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		// Base64 testing
+		String originalInput = "test input";
+		String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
 		
+		System.out.println(encodedString);
+		
+		byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+		String decodedString = new String(decodedBytes);
+		
+		System.out.println(decodedString);
 		// https://stackoverflow.com/questions/3608891/pass-variables-from-servlet-to-jsp
 		// request.getRequestDispatcher("index.jsp").forward(request, response);
 		

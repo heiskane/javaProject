@@ -12,9 +12,10 @@
 		<ul>
 			<li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
 			<li><a href="${pageContext.request.contextPath}/post.jsp">Post</a></li>
+			<li><a href="${pageContext.request.contextPath}/search.jsp">Search</a></li>
 <% if (session.getAttribute("loggedInUser") != null) { %>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/LoginServlet?submit=logout">Logout</a></li>
-			<li style="float: right;"><a href="${pageContext.request.contextPath}/index.jsp">Account(not ready)</a></li>
+			<li style="float: right;"><a href="${pageContext.request.contextPath}/account.jsp">Account(not ready)</a></li>
 <% } else { %>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/login.jsp">Login</a></li>
 <% } %>

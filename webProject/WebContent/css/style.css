@@ -9,8 +9,15 @@
 	margin: auto;
 	width: 50%;
 	padding: 15px 30px;
-	margin-top: 40px;
+	margin-top: 70px;
 }
+
+.data {
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+/* Header from w3schools */
 
 .nav ul {
 	list-style-type: none;

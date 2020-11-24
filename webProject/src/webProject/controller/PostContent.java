@@ -54,6 +54,7 @@ public class PostContent extends HttpServlet {
 					int id = posts.get(postCount - 1).getId();
 					
 					String title = request.getParameter("title");
+					// TODO Add base64 encoding to content later maybe?
 					String content = request.getParameter("content");
 					String user = (String) session.getAttribute("loggedInUser");
 					

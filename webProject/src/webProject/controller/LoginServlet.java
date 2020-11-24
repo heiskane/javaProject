@@ -37,13 +37,11 @@ public class LoginServlet extends HttpServlet {
 		
 		String user = request.getParameter("user");
 		String password = request.getParameter("pass");
-
 		String submit = request.getParameter("submit");
 		
 		// Get name of the logged in user
 		// https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSession.html
 		HttpSession session = request.getSession();
-		//System.out.println(session.getAttribute("loggedInUser"));
 		
 		// https://stackoverflow.com/questions/13963720/how-to-effectively-destroy-session-in-java-servlet
 		if (request.getParameter("submit").equals("logout"))
@@ -97,7 +95,8 @@ public class LoginServlet extends HttpServlet {
 					if (dao.addUser(id + 1, user, passwordHash))
 					{
 						response.getWriter().append("User registered");
-						response.sendRedirect(request.getContextPath() + "/login.jsp");
+						request.getSession().setAttribute("loggedInUser", user);
+						response.sendRedirect(request.getContextPath() + "/index.jsp");
 					}
 					else
 					{
