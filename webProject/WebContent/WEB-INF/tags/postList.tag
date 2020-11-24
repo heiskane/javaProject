@@ -32,7 +32,6 @@ for (UserPost post : posts) {
 	<% } %>
 	</div>
 <% } %>
-
 	
 	
 	

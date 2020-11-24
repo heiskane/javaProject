@@ -88,7 +88,8 @@ public class PostContent extends HttpServlet {
 		}
 		else
 		{
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			request.getSession().setAttribute("error", "You must login to post");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
 		}
 		
 	}

@@ -54,7 +54,8 @@ public class LoginServlet extends HttpServlet {
 		// Handle empty usernames and/or passwords
 		if (password == null || user == null || password.equals("") || user.equals(""))
 		{
-			response.getWriter().append("Error: Username or Password empty");
+			request.getSession().setAttribute("error", "Username and password cannot be empty");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
 		}
 		else
 		{
@@ -70,37 +71,48 @@ public class LoginServlet extends HttpServlet {
 			{	
 				User localUser = findUser(user, users);
 				
+				// Verify password and user
 				if (localUser != null && passwordHash.equals(localUser.getPassword()))
 				{
 					request.getSession().setAttribute("loggedInUser", user);
 					response.getWriter().append("Logged in as: " + user);
+					
+					// Reset errors. Also find a better way to do this
+					request.getSession().setAttribute("error", null);
 					response.sendRedirect(request.getContextPath() + "/index.jsp");
 				}
 				else
 				{
-					response.getWriter().append("Login failed");
+					request.getSession().setAttribute("error", "Username and/or password wrong");
+					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}
 			}
 			else if (submit.equals("Register"))
 			{
 				if (findUser(user, users) != null)
 				{
-					response.getWriter().append("Username taken!");
+					request.getSession().setAttribute("error", "Username taken");
+					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}
 				else
 				{
 					int userCount = users.size();
 					int id = users.get(userCount - 1).getId();
+					
 					// Set user id to last users id + 1
 					if (dao.addUser(id + 1, user, passwordHash))
 					{
 						response.getWriter().append("User registered");
 						request.getSession().setAttribute("loggedInUser", user);
+						
+						// Reset errors. Also find a better way to do this
+						request.getSession().setAttribute("error", null);
 						response.sendRedirect(request.getContextPath() + "/index.jsp");
 					}
 					else
 					{
-						response.getWriter().append("Registration failed");
+						request.getSession().setAttribute("error", "Something went wrong");
+						request.getRequestDispatcher("login.jsp").forward(request, response);
 					}
 				}
 			}

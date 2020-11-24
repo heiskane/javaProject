@@ -47,6 +47,8 @@ public class MyServlet extends HttpServlet {
 		String decodedString = new String(decodedBytes);
 		
 		System.out.println(decodedString);
+		
+		System.out.println(request.isRequestedSessionIdValid());
 		// https://stackoverflow.com/questions/3608891/pass-variables-from-servlet-to-jsp
 		// request.getRequestDispatcher("index.jsp").forward(request, response);
 		
