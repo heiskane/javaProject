@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import webProject.model.UserPost;
 import webProject.model.dao.Dao;
 /**
  * Servlet implementation class PostContent
@@ -35,6 +36,10 @@ public class PostContent extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
+		// Get the previous page for redirections later
+		String[] referHeader = request.getHeader("referer").split("/");
+		String referer = "/" + referHeader[referHeader.length - 1];
+		
 		if (session.getAttribute("loggedInUser") != null)
 		{
 			String action = request.getParameter("action");
@@ -46,13 +51,13 @@ public class PostContent extends HttpServlet {
 					String title = request.getParameter("title");
 					// TODO Add base64 encoding to content later maybe?
 					String content = request.getParameter("content");
-					String user = (String) session.getAttribute("loggedInUser");
+					String currentUser = (String) session.getAttribute("loggedInUser");
 					
 					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 					LocalDateTime now = LocalDateTime.now();
 					String date = dtf.format(now);
 					
-					dao.addPost(user, title, content, date);
+					dao.addPost(currentUser, title, content, date);
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsp");
 				}
@@ -60,21 +65,42 @@ public class PostContent extends HttpServlet {
 				{
 					// https://jaxenter.com/convert-java-string-int-134101.html
 					int id = Integer.parseInt(request.getParameter("id"));
-					String user = dao.getPostUser(id);
+					// Get username from posts data
+					String user = dao.getPostData(id).getUser();
 					// Allow post deletion if username is admin or current user posted it
 					if (session.getAttribute("loggedInUser").equals("admin") || session.getAttribute("loggedInUser").equals(user))
 					{
 						dao.deletePost(id);
-						response.sendRedirect(request.getContextPath() + "/index.jsp");	
+						// https://stackoverflow.com/questions/12013707/servlet-forward-response-to-caller-previous-page
+						// Redirect to previous page
+						response.sendRedirect(request.getContextPath() + referer);	
 					}
 					else {
-						System.out.println("You are not admin");
 						response.sendRedirect(request.getContextPath() + "/index.jsp");
 					}
 
 				}
+				else if (action.equals("update"))
+				{
+					// https://jaxenter.com/convert-java-string-int-134101.html
+					// Check if user has permission to edit
+					int id = Integer.parseInt(request.getParameter("id"));
+					UserPost post = dao.getPostData(id);
+					String user = post.getUser();
+					if (session.getAttribute("loggedInUser").equals("admin") || session.getAttribute("loggedInUser").equals(user))
+					{
+						String title = request.getParameter("title");
+						String content = request.getParameter("content");
+						
+						dao.updatePost(title, content, id);
+						
+						response.sendRedirect(request.getContextPath() + "/index.jsp");
+					}
+					else {
+						response.sendRedirect(request.getContextPath() + "/index.jsp");
+					}
+				}
 			}
-			
 		}
 		else
 		{

@@ -27,6 +27,7 @@ for (UserPost post : posts) {
 	<% if (session.getAttribute("loggedInUser") != null) { %>
 		<% if (session.getAttribute("loggedInUser").equals(user) || session.getAttribute("loggedInUser").equals("admin")) { %>
 	  	<a href="${pageContext.request.contextPath}/post?action=delete&id=<%=post.getId() %>">delete</a>
+	  	<a href="${pageContext.request.contextPath}/edit.jsp?id=<%=post.getId() %>">edit</a>
 	  	<br><br>
 	  	<% } %>
 	<% } %>

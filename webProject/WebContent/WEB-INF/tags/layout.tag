@@ -15,7 +15,7 @@
 			<li><a href="${pageContext.request.contextPath}/search.jsp">Search</a></li>
 <% if (session.getAttribute("loggedInUser") != null) { %>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/login?submit=logout">Logout</a></li>
-			<li style="float: right;"><a href="${pageContext.request.contextPath}/account.jsp">Account (<%= session.getAttribute("loggedInUser") %>)</a></li>
+			<li style="float: right;"><a href="${pageContext.request.contextPath}/account.jsp">Profile (<%= session.getAttribute("loggedInUser") %>)</a></li>
 <% } else { %>
 			<li style="float: right;"><a href="${pageContext.request.contextPath}/login.jsp">Login</a></li>
 <% } %>

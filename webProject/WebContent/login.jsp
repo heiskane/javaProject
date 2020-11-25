@@ -7,10 +7,14 @@
 		<h1 class="head">Login</h1>
 		<p>${ error }</p>
 		<form method="POST" action="/webProject/login">
-			<p>Username: </p><input type="text" name="user" /><br>
+			<p>Username: </p><input id="username" type="text" name="user" /><br>
 			<p>Password: </p><input type="password" name="pass" /><br><br>
 			<input type="submit" value="Login" name="submit" />
 			<input type="submit" value="Register" name="submit" />
 		</form>
 	</div>
+	<script>
+		<%-- Focus on username field --%>
+		document.getElementById("username").focus();
+	</script>
 </t:layout>

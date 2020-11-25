@@ -2,7 +2,8 @@
 <%
 // If user hasnt logged in redirect to login page
 if (session.getAttribute("loggedInUser") == null) {	
-	session.setAttribute("targetPage", request.getRequestURL());
+	// Dont think i need this
+	//session.setAttribute("targetPage", request.getRequestURL());
 	session.setAttribute("error", "You must be logged in");
 	response.sendRedirect("login.jsp");
 	return;

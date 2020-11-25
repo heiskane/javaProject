@@ -76,7 +76,7 @@ public class Dao {
 	}
 
 	public boolean doLogin(String user, String password) {
-		sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+		sql = "SELECT * FROM users WHERE username = ? AND password = ?;";
 		try 
 		{
 			con = connect();
@@ -131,7 +131,7 @@ public class Dao {
 	public boolean addUser(String user, String password, String salt) {
 		// Must get id before setting sql query or sql queries are going to be mixed up
 		int id = getLastId("users") + 1;
-		sql = "INSERT INTO users(id, username, password, salt) VALUES(?, ?, ?, ?)";
+		sql = "INSERT INTO users(id, username, password, salt) VALUES(?, ?, ?, ?);";
 		try 
 		{
 			con = connect();
@@ -166,8 +166,8 @@ public class Dao {
 
 	public boolean addPost(String user, String title, String content, String date) {
 		// Must get id before setting sql query or sql queries are going to be mixed up
-		int id = getLastId("users") + 1;
-		sql = "INSERT INTO posts(id, username, title, content, date) VALUES(?, ?, ?, ?, ?)";
+		int id = getLastId("posts") + 1;
+		sql = "INSERT INTO posts(id, username, title, content, date) VALUES(?, ?, ?, ?, ?);";
 		try 
 		{
 			con = connect();
@@ -194,7 +194,7 @@ public class Dao {
 	
 	public void deletePost(int id) {
 		// https://www.sqlitetutorial.net/sqlite-java/delete/
-		sql = "DELETE FROM posts WHERE id = ?";
+		sql = "DELETE FROM posts WHERE id = ?;";
 		try
 		{
 			con = connect();
@@ -212,10 +212,10 @@ public class Dao {
 		}
 	}
 	
-	public String getPostUser(int id) {
+	public UserPost getPostData(int id) {
 		// https://www.sqlitetutorial.net/sqlite-java/delete/
-		sql = "SELECT username FROM posts WHERE id = ?";
-		String user = "";
+		sql = "SELECT * FROM posts WHERE id = ?";
+		UserPost post = new UserPost();
 		try
 		{
 			con = connect();
@@ -224,7 +224,16 @@ public class Dao {
 					prepped = con.prepareStatement(sql);
 					prepped.setInt(1, id);       		
 	        		rs = prepped.executeQuery();
-	        		user = rs.getString(1);
+	        		// ID
+	        		post.setId(id);
+	        		// Username
+	        		post.setUser(rs.getString(2));
+	        		// Title
+	        		post.setTitle(rs.getString(3));
+	        		// Content
+	        		post.setContent(rs.getString(4));
+	        		// Date
+	        		post.setDate(rs.getString(5));
 			}
 			con.close();
 		}
@@ -233,7 +242,7 @@ public class Dao {
 			e.printStackTrace();
 			return null;
 		}
-		return user;
+		return post;
 	}
 	
 	public String getUserSalt(String username) {
@@ -258,6 +267,28 @@ public class Dao {
 			return null;
 		}
 		return salt;
+	}
+	
+	public void updatePost(String title, String content, int id) {
+		// https://www.sqlitetutorial.net/sqlite-java/delete/
+		sql = "UPDATE posts SET title = ?, content = ? WHERE id = ?;";
+		try
+		{
+			con = connect();
+			if (con != null)
+			{
+					prepped = con.prepareStatement(sql);
+					prepped.setString(1, title); 
+					prepped.setString(2, content);
+					prepped.setInt(3, id);
+	        		prepped.executeUpdate();
+			}
+			con.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 }

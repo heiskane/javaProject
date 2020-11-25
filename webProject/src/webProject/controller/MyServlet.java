@@ -20,7 +20,12 @@ import webProject.model.UserPost;
 import webProject.model.dao.Dao;
 
 /**
- * Servlet implementation class WebServlet
+ *	Test servlet to be removed later
+ *	Test servlet to be removed later
+ *	Test servlet to be removed later
+ *	Test servlet to be removed later
+ *	Test servlet to be removed later
+ *	Test servlet to be removed later
  */
 @WebServlet("/MyServlet")
 public class MyServlet extends HttpServlet {
@@ -41,10 +46,13 @@ public class MyServlet extends HttpServlet {
 
 		Dao dao = new Dao();
 		
+		
+		/*
 		String[] test = Hash.makeHash(null, "guest");
 		String salt = test[0];
 		String hash = test[1];
 		System.out.println(salt + " " + hash);
+		*/
 		
 		// Base64 testing
 		/* String originalInput = "test input";

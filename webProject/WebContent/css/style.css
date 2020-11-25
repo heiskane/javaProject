@@ -12,6 +12,10 @@
 	margin-top: 70px;
 }
 
+.content a {
+	margin-right: 25px;
+}
+
 .data {
 	white-space: pre-wrap;
 	overflow-wrap: break-word;

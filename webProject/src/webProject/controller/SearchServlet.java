@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import webProject.model.SearchPost;
 import webProject.model.UserPost;
-import webProject.model.dao.Dao;
 
 /**
  * Servlet implementation class SearchServlet
@@ -35,22 +35,7 @@ public class SearchServlet extends HttpServlet {
 		// Maybe implement the search to the main page later
 		String search = request.getParameter("search").toLowerCase();
 		
-		Dao dao = new Dao();
-		ArrayList<UserPost> posts = dao.listAllPosts();
-		ArrayList<UserPost> results = new ArrayList<UserPost>();
-		
-		for (UserPost post : posts)
-		{
-			// Search by title, content or user
-			// Everything is set to lowercase to make the search case insensitive
-			String content = post.getContent().toLowerCase();
-			String title = post.getTitle().toLowerCase();
-			String user = post.getUser().toLowerCase();
-			if (content.contains(search) || title.contains(search) || user.contains(search))
-			{
-				results.add(post);
-			}
-		}
+		ArrayList<UserPost> results = SearchPost.search(search);
 		
 		request.setAttribute("results", results);
 		request.getRequestDispatcher("search.jsp").forward(request, response);
