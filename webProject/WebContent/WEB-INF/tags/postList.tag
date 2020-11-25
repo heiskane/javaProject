@@ -9,7 +9,7 @@ if (request.getAttribute("results") != null) {
 	posts = dao.listAllPosts();
 }
 
-//Sort posts by newest
+// Sort posts by newest
 for(int i = 0, j = posts.size() - 1; i < j; i++) {
 	posts.add(i, posts.remove(j));
 }
@@ -26,7 +26,7 @@ for (UserPost post : posts) {
 <%-- Show delete button only for admin and original poster --%>
 	<% if (session.getAttribute("loggedInUser") != null) { %>
 		<% if (session.getAttribute("loggedInUser").equals(user) || session.getAttribute("loggedInUser").equals("admin")) { %>
-	  	<a href="${pageContext.request.contextPath}/PostContent?action=delete&id=<%=post.getId() %>">delete</a>
+	  	<a href="${pageContext.request.contextPath}/post?action=delete&id=<%=post.getId() %>">delete</a>
 	  	<br><br>
 	  	<% } %>
 	<% } %>

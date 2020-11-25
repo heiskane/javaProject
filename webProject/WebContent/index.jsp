@@ -3,6 +3,7 @@
     import="java.util.ArrayList, webProject.model.UserPost, webProject.model.dao.Dao"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:layout>
+	<t:requireLogin />
 	<t:hello />
 	<t:postList />
 	<br>

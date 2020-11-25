@@ -4,17 +4,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-// import java.sql.Statement;
 import java.util.ArrayList;
 
-import webProject.model.User;
+import org.sqlite.SQLiteException;
+
 import webProject.model.UserPost;
 
 public class Dao {
 
 	private Connection con = null;
 	private ResultSet rs = null;
-	private PreparedStatement stmtPrep = null; 
+	private PreparedStatement prepped = null; 
 	private String sql;
 	private String db = "webProject/project.db3";
 
@@ -50,8 +50,8 @@ public class Dao {
 			con = connect();
 			if(con != null)
 			{
-				stmtPrep = con.prepareStatement(sql);        		
-        		rs = stmtPrep.executeQuery();   
+				prepped = con.prepareStatement(sql);        		
+        		rs = prepped.executeQuery();   
 				if(rs != null)
 				{
 					while(rs.next())
@@ -74,53 +74,24 @@ public class Dao {
 		}		
 		return posts;
 	}
-	
-	public ArrayList<User> listAllUsers() {
-		ArrayList<User> users = new ArrayList<User>();
-		sql = "SELECT * FROM users";       
-		try 
-		{
-			con = connect();
-			if(con != null)
-			{
-				stmtPrep = con.prepareStatement(sql);        		
-        		rs = stmtPrep.executeQuery();   
-				if(rs != null)
-				{
-					while(rs.next())
-					{
-						User user = new User();
-						user.setId(rs.getInt(1));
-						user.setUsername(rs.getString(2));
-						user.setPassword(rs.getString(3));
-						users.add(user);
-					}					
-				}
-			}
-			con.close();
-		} 
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}		
-		return users;
-	}
-	
-	// Replace with method in LoginServlet?
-	/*
+
 	public boolean doLogin(String user, String password) {
-		sql = "SELECT * FROM users WHERE username ='" + user + "' AND password ='" + password + "'";
+		sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 		try 
 		{
 			con = connect();
 			if (con != null) 
 			{
-				stmtPrep = con.prepareStatement(sql);        		
-        		rs = stmtPrep.executeQuery();
+				prepped = con.prepareStatement(sql);
+    			prepped.setString(1, user);
+    			prepped.setString(2, password);
+        		rs = prepped.executeQuery();
         		if (rs != null) 
         		{
+        			// Check if user with the password was found then close connection and return true
         			if (rs.next())
         			{
+        				con.close();
         				return true;
         			}
         		}
@@ -132,11 +103,35 @@ public class Dao {
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
+
+	public int getLastId(String table) {
+		// https://stackoverflow.com/questions/30994897/how-to-get-last-inserted-row-in-sqlite-android/30994929
+		// Get last id 
+		sql = "SELECT * FROM " + table + " ORDER BY id DESC LIMIT 1;";
+		int id = 0;
+		try
+		{
+			con = connect();
+			if (con != null)
+			{
+				prepped = con.prepareStatement(sql);
+	    		rs = prepped.executeQuery();
+	    		id = rs.getInt(1);
+			}
+			con.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return id;
+	}
 	
-	public boolean addUser(int id, String user, String password) {
-		//sql = "INSERT INTO users VALUES('" + id + "','" + user + "','" + password + "')";
-		sql = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
+	public boolean addUser(String user, String password, String salt) {
+		// Must get id before setting sql query or sql queries are going to be mixed up
+		int id = getLastId("users") + 1;
+		sql = "INSERT INTO users(id, username, password, salt) VALUES(?, ?, ?, ?)";
 		try 
 		{
 			con = connect();
@@ -144,17 +139,19 @@ public class Dao {
 			{ 		
         		try 
         		{
-        			// Apparently this sanitizes?
-        			PreparedStatement prepped = con.prepareStatement(sql);
+        			prepped = con.prepareStatement(sql);
         			prepped.setInt(1, id);
         			prepped.setString(2, user);
         			prepped.setString(3, password);
+        			prepped.setString(4, salt);
         			prepped.executeUpdate();
+        			con.close();
+        			return true;
         		}
-        		catch (Exception e) 
+        		catch (SQLiteException e) 
         		{
         			e.printStackTrace();
-        			System.out.println("Registration failed");
+        			System.out.println("Username taken");
         			return false;
         		}
 			}
@@ -164,31 +161,27 @@ public class Dao {
 		{
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
-	public boolean addPost(int id, String user, String title, String content, String date) {
+	public boolean addPost(String user, String title, String content, String date) {
+		// Must get id before setting sql query or sql queries are going to be mixed up
+		int id = getLastId("users") + 1;
 		sql = "INSERT INTO posts(id, username, title, content, date) VALUES(?, ?, ?, ?, ?)";
 		try 
 		{
 			con = connect();
 			if (con != null)
 			{ 		
-        		try 
-        		{
-        			PreparedStatement prepped = con.prepareStatement(sql);
-        			prepped.setInt(1, id);
-        			prepped.setString(2, user);
-        			prepped.setString(3, title);
-        			prepped.setString(4, content);
-        			prepped.setString(5, date);
-        			prepped.executeUpdate();
-        		}
-        		catch (Exception e) 
-        		{
-        			e.printStackTrace();
-        			return false;
-        		}
+    			prepped = con.prepareStatement(sql);
+    			prepped.setInt(1, id);
+    			prepped.setString(2, user);
+    			prepped.setString(3, title);
+    			prepped.setString(4, content);
+    			prepped.setString(5, date);
+    			prepped.executeUpdate();
+    			con.close();
+    			return true;
 			}
 			con.close();
 		}
@@ -196,7 +189,7 @@ public class Dao {
 		{
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 	
 	public void deletePost(int id) {
@@ -207,16 +200,9 @@ public class Dao {
 			con = connect();
 			if (con != null)
 			{
-				try
-				{
-					PreparedStatement prepped = con.prepareStatement(sql);
-					prepped.setInt(1, id);
-					prepped.executeUpdate();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
+				prepped = con.prepareStatement(sql);
+				prepped.setInt(1, id);
+				prepped.executeUpdate();
 			}
 			con.close();
 		}
@@ -235,18 +221,10 @@ public class Dao {
 			con = connect();
 			if (con != null)
 			{
-				try
-				{
-					PreparedStatement prepped = con.prepareStatement(sql);
+					prepped = con.prepareStatement(sql);
 					prepped.setInt(1, id);       		
 	        		rs = prepped.executeQuery();
 	        		user = rs.getString(1);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					return null;
-				}
 			}
 			con.close();
 		}
@@ -258,4 +236,41 @@ public class Dao {
 		return user;
 	}
 	
+	public String getUserSalt(String username) {
+		// https://www.sqlitetutorial.net/sqlite-java/delete/
+		sql = "SELECT salt FROM users WHERE username = ?";
+		String salt = "";
+		try
+		{
+			con = connect();
+			if (con != null)
+			{
+					prepped = con.prepareStatement(sql);
+					prepped.setString(1, username);       		
+	        		rs = prepped.executeQuery();
+	        		salt = rs.getString(1);
+			}
+			con.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return salt;
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

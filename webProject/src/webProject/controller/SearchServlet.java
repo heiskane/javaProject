@@ -15,7 +15,7 @@ import webProject.model.dao.Dao;
 /**
  * Servlet implementation class SearchServlet
  */
-@WebServlet("/SearchServlet")
+@WebServlet("/search")
 public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -33,7 +33,7 @@ public class SearchServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Maybe implement the search to the main page later
-		String search = request.getParameter("search");
+		String search = request.getParameter("search").toLowerCase();
 		
 		Dao dao = new Dao();
 		ArrayList<UserPost> posts = dao.listAllPosts();
@@ -42,7 +42,11 @@ public class SearchServlet extends HttpServlet {
 		for (UserPost post : posts)
 		{
 			// Search by title, content or user
-			if (post.getContent().contains(search) || post.getTitle().contains(search) || post.getUser().contains(search))
+			// Everything is set to lowercase to make the search case insensitive
+			String content = post.getContent().toLowerCase();
+			String title = post.getTitle().toLowerCase();
+			String user = post.getUser().toLowerCase();
+			if (content.contains(search) || title.contains(search) || user.contains(search))
 			{
 				results.add(post);
 			}

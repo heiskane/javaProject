@@ -1,6 +1,7 @@
 package webProject.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+import webProject.model.Hash;
 import webProject.model.UserPost;
 import webProject.model.dao.Dao;
 
@@ -37,8 +39,15 @@ public class MyServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		Dao dao = new Dao();
+		
+		String[] test = Hash.makeHash(null, "guest");
+		String salt = test[0];
+		String hash = test[1];
+		System.out.println(salt + " " + hash);
+		
 		// Base64 testing
-		String originalInput = "test input";
+		/* String originalInput = "test input";
 		String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
 		
 		System.out.println(encodedString);
@@ -49,6 +58,9 @@ public class MyServlet extends HttpServlet {
 		System.out.println(decodedString);
 		
 		System.out.println(request.isRequestedSessionIdValid());
+		
+		InputStream test = getServletContext().getResourceAsStream("/WEB-INF/test.jsp");
+		*/
 		// https://stackoverflow.com/questions/3608891/pass-variables-from-servlet-to-jsp
 		// request.getRequestDispatcher("index.jsp").forward(request, response);
 		

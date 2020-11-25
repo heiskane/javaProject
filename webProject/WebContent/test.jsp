@@ -3,6 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:layout>
+	<t:requireLogin />
 	<div class="page">
 	  <h1 class="head">Login</h1>
 	  <form action="/webProject/LoginServlet" method="POST">
