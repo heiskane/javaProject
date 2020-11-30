@@ -44,7 +44,7 @@ public class Dao {
 	
 	public ArrayList<UserPost> listAllPosts() {
 		ArrayList<UserPost> posts = new ArrayList<UserPost>();
-		sql = "SELECT * FROM posts";       
+		sql = "SELECT * FROM posts ORDER BY id DESC;";      
 		try 
 		{
 			con = connect();
@@ -108,7 +108,7 @@ public class Dao {
 	public int getLastId(String table) {
 		// https://stackoverflow.com/questions/30994897/how-to-get-last-inserted-row-in-sqlite-android/30994929
 		// Get last id 
-		sql = "SELECT * FROM " + table + " ORDER BY id DESC LIMIT 1;";
+		sql = "SELECT id FROM " + table + " ORDER BY id DESC LIMIT 1;";
 		int id = 0;
 		try
 		{
@@ -214,7 +214,7 @@ public class Dao {
 	
 	public UserPost getPostData(int id) {
 		// https://www.sqlitetutorial.net/sqlite-java/delete/
-		sql = "SELECT * FROM posts WHERE id = ?";
+		sql = "SELECT * FROM posts WHERE id = ?;";
 		UserPost post = new UserPost();
 		try
 		{
@@ -247,7 +247,7 @@ public class Dao {
 	
 	public String getUserSalt(String username) {
 		// https://www.sqlitetutorial.net/sqlite-java/delete/
-		sql = "SELECT salt FROM users WHERE username = ?";
+		sql = "SELECT salt FROM users WHERE username = ?;";
 		String salt = "";
 		try
 		{

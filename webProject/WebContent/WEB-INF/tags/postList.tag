@@ -9,11 +9,6 @@ if (request.getAttribute("results") != null) {
 	posts = dao.listAllPosts();
 }
 
-// Sort posts by newest
-for(int i = 0, j = posts.size() - 1; i < j; i++) {
-	posts.add(i, posts.remove(j));
-}
-
 for (UserPost post : posts) { 
 	String user = post.getUser(); %>
 	  <div class="content">
