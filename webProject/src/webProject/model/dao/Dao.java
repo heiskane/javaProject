@@ -104,34 +104,10 @@ public class Dao {
 		}
 		return false;
 	}
-
-	public int getLastId(String table) {
-		// https://stackoverflow.com/questions/30994897/how-to-get-last-inserted-row-in-sqlite-android/30994929
-		// Get last id 
-		sql = "SELECT id FROM " + table + " ORDER BY id DESC LIMIT 1;";
-		int id = 0;
-		try
-		{
-			con = connect();
-			if (con != null)
-			{
-				prepped = con.prepareStatement(sql);
-	    		rs = prepped.executeQuery();
-	    		id = rs.getInt(1);
-			}
-			con.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return id;
-	}
 	
 	public boolean addUser(String user, String password, String salt) {
-		// Must get id before setting sql query or sql queries are going to be mixed up
-		int id = getLastId("users") + 1;
-		sql = "INSERT INTO users(id, username, password, salt) VALUES(?, ?, ?, ?);";
+		// Well apparently the id get automatically set
+		sql = "INSERT INTO users(username, password, salt) VALUES(?, ?, ?);";
 		try 
 		{
 			con = connect();
@@ -140,10 +116,10 @@ public class Dao {
         		try 
         		{
         			prepped = con.prepareStatement(sql);
-        			prepped.setInt(1, id);
-        			prepped.setString(2, user);
-        			prepped.setString(3, password);
-        			prepped.setString(4, salt);
+        			//prepped.setInt(1, id);
+        			prepped.setString(1, user);
+        			prepped.setString(2, password);
+        			prepped.setString(3, salt);
         			prepped.executeUpdate();
         			con.close();
         			return true;
@@ -165,20 +141,17 @@ public class Dao {
 	}
 
 	public boolean addPost(String user, String title, String content, String date) {
-		// Must get id before setting sql query or sql queries are going to be mixed up
-		int id = getLastId("posts") + 1;
-		sql = "INSERT INTO posts(id, username, title, content, date) VALUES(?, ?, ?, ?, ?);";
+		sql = "INSERT INTO posts(username, title, content, date) VALUES(?, ?, ?, ?);";
 		try 
 		{
 			con = connect();
 			if (con != null)
 			{ 		
     			prepped = con.prepareStatement(sql);
-    			prepped.setInt(1, id);
-    			prepped.setString(2, user);
-    			prepped.setString(3, title);
-    			prepped.setString(4, content);
-    			prepped.setString(5, date);
+    			prepped.setString(1, user);
+    			prepped.setString(2, title);
+    			prepped.setString(3, content);
+    			prepped.setString(4, date);
     			prepped.executeUpdate();
     			con.close();
     			return true;

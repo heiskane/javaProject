@@ -53,7 +53,7 @@ public class PostContent extends HttpServlet {
 					String content = request.getParameter("content");
 					String currentUser = (String) session.getAttribute("loggedInUser");
 					
-					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 					LocalDateTime now = LocalDateTime.now();
 					String date = dtf.format(now);
 					
