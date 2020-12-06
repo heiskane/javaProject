@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import webProject.model.UserPost;
 import webProject.model.dao.Dao;
+
 /**
  * Servlet implementation class PostContent
  */

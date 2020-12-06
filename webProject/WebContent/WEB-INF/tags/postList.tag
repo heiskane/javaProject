@@ -12,11 +12,12 @@ if (request.getAttribute("results") != null) {
 for (UserPost post : posts) { 
 	String user = post.getUser(); %>
 	  <div class="content">
-	  	<h1><%=post.getTitle() %></h1>
+	  	<h1><%= post.getTitle() %></h1>
 	  	<p>Posted by: <b><%= user %></b></p>
-	  	<p>Post date: <%=post.getDate() %></p>
+	  	<p>Post date: <%= post.getDate() %></p>
 	  	<div class="data">
-	  		<p><%=post.getContent() %></p>
+	    	<%-- https://stackoverflow.com/questions/1265282/recommended-method-for-escaping-html-in-java --%>
+	  		<p><%= post.getContent() %></p>
 	  	</div>
 <%-- Show delete button only for admin and original poster --%>
 	<% if (session.getAttribute("loggedInUser") != null) { %>

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpSession;
 
 import webProject.model.Hash;
 import webProject.model.dao.Dao;
+
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 /**
  * Servlet implementation class LoginServlet
  */
@@ -34,6 +37,11 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String user = request.getParameter("user");
+		
+		// https://stackoverflow.com/questions/1265282/recommended-method-for-escaping-html-in-java
+		// Sanitize username. Not sure if this is the best place to do this
+		// but it must be sanitized because is is displayed on the page
+		user = escapeHtml4(user);
 		String password = request.getParameter("pass");
 		String submit = request.getParameter("submit");
 		

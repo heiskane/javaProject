@@ -10,6 +10,8 @@ import org.sqlite.SQLiteException;
 
 import webProject.model.UserPost;
 
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 public class Dao {
 
 	private Connection con = null;
@@ -59,8 +61,8 @@ public class Dao {
 						UserPost post = new UserPost();
 						post.setId(rs.getInt(1));
 						post.setUser(rs.getString(2));
-						post.setTitle(rs.getString(3));
-						post.setContent(rs.getString(4));
+						post.setTitle(escapeHtml4(rs.getString(3)));
+						post.setContent(escapeHtml4(rs.getString(4)));
 						post.setDate(rs.getString(5));
 						posts.add(post);
 					}					
@@ -116,7 +118,6 @@ public class Dao {
         		try 
         		{
         			prepped = con.prepareStatement(sql);
-        			//prepped.setInt(1, id);
         			prepped.setString(1, user);
         			prepped.setString(2, password);
         			prepped.setString(3, salt);

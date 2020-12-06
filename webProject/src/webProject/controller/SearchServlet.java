@@ -39,8 +39,6 @@ public class SearchServlet extends HttpServlet {
 		
 		request.setAttribute("results", results);
 		request.getRequestDispatcher("search.jsp").forward(request, response);
-		
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
