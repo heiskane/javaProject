@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+//import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
+
 import webProject.model.UserPost;
 import webProject.model.dao.Dao;
 
@@ -54,11 +58,17 @@ public class PostContent extends HttpServlet {
 					String content = request.getParameter("content");
 					String currentUser = (String) session.getAttribute("loggedInUser");
 					
+					// https://github.com/OWASP/java-html-sanitizer
+					PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.IMAGES);
+					
+					String safeTitle = policy.sanitize(title);
+					String safeContent = policy.sanitize(content);
+					
 					DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 					LocalDateTime now = LocalDateTime.now();
 					String date = dtf.format(now);
 					
-					dao.addPost(currentUser, title, content, date);
+					dao.addPost(currentUser, safeTitle, safeContent, date);
 					
 					response.sendRedirect(request.getContextPath() + "/index.jsp");
 				}

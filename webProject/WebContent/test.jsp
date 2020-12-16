@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout>
+<t:test_layout>
 	<t:requireLogin />
-
-</t:layout>
+	<t:postList />
+</t:test_layout>

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import webProject.model.Hash;
 import webProject.model.UserPost;
@@ -46,6 +49,21 @@ public class MyServlet extends HttpServlet {
 
 		Dao dao = new Dao();
 		
+		String untrustedHTML = "<img src='https://heiskanen.rocks/static/img/mario.png' /><b>asdasd</b>";
+		
+		PolicyFactory policy = new HtmlPolicyBuilder()
+			    .allowElements("img", "b")
+			    .allowUrlProtocols("https")
+			    .allowAttributes("src").onElements("img")
+			    .toFactory();
+		String safeHTML = policy.sanitize(untrustedHTML);
+		
+		System.out.println(safeHTML);
+		
+		PolicyFactory test = Sanitizers.FORMATTING.and(Sanitizers.IMAGES);
+		safeHTML = test.sanitize(untrustedHTML);
+		
+		System.out.println(safeHTML);
 		
 		/*
 		String[] test = Hash.makeHash(null, "guest");

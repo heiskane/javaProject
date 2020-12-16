@@ -62,7 +62,7 @@ public class Dao {
 						post.setId(rs.getInt(1));
 						post.setUser(rs.getString(2));
 						post.setTitle(escapeHtml4(rs.getString(3)));
-						post.setContent(escapeHtml4(rs.getString(4)));
+						post.setContent(rs.getString(4));
 						post.setDate(rs.getString(5));
 						posts.add(post);
 					}					

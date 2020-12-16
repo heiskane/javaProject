@@ -21,6 +21,11 @@
 	overflow-wrap: break-word;
 }
 
+.data img {
+	display: block;
+	max-width: 100%;
+}
+
 /* Header from w3schools */
 
 .nav ul {

@@ -11,6 +11,7 @@ if (request.getAttribute("results") != null) {
 
 for (UserPost post : posts) { 
 	String user = post.getUser(); %>
+	  <%--<div class="container-sm"> --%>
 	  <div class="content">
 	  	<h1><%= post.getTitle() %></h1>
 	  	<p>Posted by: <b><%= user %></b></p>
@@ -22,8 +23,8 @@ for (UserPost post : posts) {
 <%-- Show delete button only for admin and original poster --%>
 	<% if (session.getAttribute("loggedInUser") != null) { %>
 		<% if (session.getAttribute("loggedInUser").equals(user) || session.getAttribute("loggedInUser").equals("admin")) { %>
-	  	<a href="${pageContext.request.contextPath}/post?action=delete&id=<%=post.getId() %>">delete</a>
-	  	<a href="${pageContext.request.contextPath}/edit.jsp?id=<%=post.getId() %>">edit</a>
+	  	<a href="${pageContext.request.contextPath}/post?action=delete&id=<%= post.getId() %>">delete</a>
+	  	<a href="${pageContext.request.contextPath}/edit.jsp?id=<%= post.getId() %>">edit</a>
 	  	<br><br>
 	  	<% } %>
 	<% } %>
